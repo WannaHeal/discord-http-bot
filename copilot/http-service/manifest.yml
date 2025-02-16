@@ -23,9 +23,9 @@ image:
 #     timeout: 5s
 
 # Number of CPU units for the task.
-cpu: 1024
+cpu: 256
 # Amount of memory in MiB used by the task.
-memory: 2048
+memory: 512
 
 # Connect your App Runner service to your environment's VPC.
 # network:
