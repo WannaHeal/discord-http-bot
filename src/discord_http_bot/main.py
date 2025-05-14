@@ -33,6 +33,15 @@ async def lifespan(app: FastAPI):
         },
     )
     logger.info(response.text)
+    response = httpx.post(
+        f"https://discord.com/api/v10/applications/{DISCORD_APPLICATION_ID}/commands",
+        headers={"Authorization": f"Bot {DISCORD_BOT_TOKEN}"},
+        json={
+            "name": "카페",
+            "description": "카페 접속용 URL을 출력합니다.",
+        },
+    )
+    logger.info(response.text)
     yield
 
 
@@ -52,10 +61,22 @@ class Member(BaseModel):
     user: User
 
 
-class DiscordInteractionRequest(BaseModel):
-    type: DiscordInteractionType
+class Data(BaseModel):
+    name: typing.Literal["bmsinfo", "카페"]
+
+
+class DiscordPingRequest(BaseModel):
+    type: typing.Literal[DiscordInteractionType.PING]
+
+
+class DiscordApplicationCommandRequest(BaseModel):
+    type: typing.Literal[DiscordInteractionType.APPLICATION_COMMAND]
     user: User | None = None
     member: Member | None = None
+    data: Data
+
+
+DiscordInteractionRequest = DiscordPingRequest | DiscordApplicationCommandRequest
 
 
 class DiscordInteractionCallbackData(BaseModel):
@@ -98,11 +119,19 @@ async def process_interaction_request(
             else:
                 info_message = "유저가 알 수 없는 경로로 기능 호출"
             logger.info(info_message)
-            bms_info_text = "븜스 입문용 정보 저장소입니다! https://sites.google.com/view/remilegi-bms"
-            return DiscordInteractionCallbackResponse(
-                type=DiscordInteractionCallbackType.CHANNEL_MESSAGE_WITH_SOURCE,
-                data=DiscordInteractionCallbackData(content=bms_info_text),
-            )
+            match body.data:
+                case "카페":
+                    cafe_info_text = "사좋돌아 https://sadoljoa.co.kr"
+                    return DiscordInteractionCallbackResponse(
+                        type=DiscordInteractionCallbackType.CHANNEL_MESSAGE_WITH_SOURCE,
+                        data=DiscordInteractionCallbackData(content=cafe_info_text),
+                    )
+                case _:
+                    bms_info_text = "븜스 입문용 정보 저장소입니다! https://sites.google.com/view/remilegi-bms"
+                    return DiscordInteractionCallbackResponse(
+                        type=DiscordInteractionCallbackType.CHANNEL_MESSAGE_WITH_SOURCE,
+                        data=DiscordInteractionCallbackData(content=bms_info_text),
+                    )
 
 
 @app.get("/")
