@@ -62,7 +62,7 @@ class Member(BaseModel):
 
 
 class Data(BaseModel):
-    name: typing.Literal["bmsinfo", "카페"]
+    name: str
 
 
 class DiscordApplicationCommandRequest(BaseModel):
