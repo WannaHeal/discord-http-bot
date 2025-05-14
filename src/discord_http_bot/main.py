@@ -65,15 +65,20 @@ class Data(BaseModel):
     name: typing.Literal["bmsinfo", "카페"]
 
 
-class DiscordPingRequest(BaseModel):
-    type: typing.Literal[DiscordInteractionType.PING]
-
-
 class DiscordApplicationCommandRequest(BaseModel):
-    type: typing.Literal[DiscordInteractionType.APPLICATION_COMMAND]
+    type: typing.Literal[
+        DiscordInteractionType.APPLICATION_COMMAND,
+        DiscordInteractionType.APPLICATION_COMMAND_AUTOCOMPLETE,
+        DiscordInteractionType.MESSAGE_COMPONENT,
+        DiscordInteractionType.MODAL_SUBMIT,
+    ]
     user: User | None = None
     member: Member | None = None
     data: Data
+
+
+class DiscordPingRequest(BaseModel):
+    type: typing.Literal[DiscordInteractionType.PING]
 
 
 DiscordInteractionRequest = DiscordPingRequest | DiscordApplicationCommandRequest
