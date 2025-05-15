@@ -1,7 +1,7 @@
 import enum
 
 
-class DiscordInteractionType(enum.Enum):
+class DiscordInteractionType(enum.IntEnum):
     PING = 1
     APPLICATION_COMMAND = 2
     MESSAGE_COMPONENT = 3
@@ -9,6 +9,6 @@ class DiscordInteractionType(enum.Enum):
     MODAL_SUBMIT = 5
 
 
-class DiscordInteractionCallbackType(enum.Enum):
+class DiscordInteractionCallbackType(enum.IntEnum):
     PONG = 1
     CHANNEL_MESSAGE_WITH_SOURCE = 4
