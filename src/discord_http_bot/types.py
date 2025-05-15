@@ -1,5 +1,4 @@
 import enum
-import typing
 
 
 class DiscordInteractionType(enum.Enum):
